@@ -1,0 +1,7 @@
+{% if 'routes_with_tag' in vars['ip'] %}
+{%   for route in vars['ip']['routes_with_tag'] %}
+- parents:
+  lines:
+    - ip route {{ route['network'] }} {{ route['netmask'] }} {{ route['next_hop'] }} tag {{ route['tag']}}
+{%   endfor %}
+{% endif %}
