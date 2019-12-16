@@ -6,7 +6,7 @@
     template: interface/loopback.j2
     lines:
     - regex: '^interface (loop\S+)$'
-      exmaples:
+      examples:
       - 'interface loopback340'
       captures:
       - name
@@ -16,7 +16,7 @@
             name: "{{ name }}"
       lines:
       - regex: '^\s*vrf member (\S*)$'
-        exmaples:
+        examples:
         - '  vrf member zone1'
         captures:
         - vrf
@@ -25,7 +25,7 @@
             "{{ name }}":
               vrf: "{{ vrf }}"
       - regex: '^\s*description (.*)$'
-        exmaples:
+        examples:
         - 'description My interface description'
         captures:
         - description
@@ -73,7 +73,7 @@
       #           access:
       #             vlan: "{{ vlan }}"
       # - regex: '^ switchport trunk encapsulation (\w+)$'
-      #   exmaples:
+      #   examples:
       #   - ' switchport trunk encapsulation dot1q'
       #   captures:
       #   - switchport_trunk_encapsulation
@@ -84,7 +84,7 @@
       #           trunk:
       #             encapsulation: "{{ switchport_trunk_encapsulation }}"
       # - regex: '^ switchport trunk native vlan (\d{1,4})$'
-      #   exmaples:
+      #   examples:
       #   - ' switchport trunk native vlan 5'
       #   captures:
       #   - vlan
@@ -95,7 +95,7 @@
       #           trunk:
       #             native_vlan: "{{ vlan }}"
       # - regex: '^ switchport trunk allowed vlan (?!(add))(.*)$'
-      #   exmaples:
+      #   examples:
       #   - 'switchport trunk allowed vlan 1,2,903-905'
       #   captures:
       #   - not add
@@ -108,7 +108,7 @@
       #             allowed_vlans:
       #               vlans: "\"{{ vlans }}\""
       # - regex: '^ switchport trunk allowed vlan add (.*)$'
-      #   exmaples:
+      #   examples:
       #   - ' switchport trunk allowed vlan add 1002-1005'
       #   captures:
       #   - vlans
@@ -141,7 +141,7 @@
       #         channel_group: "{{ channel_group }}"
       #         channel_group_mode: "{{ channel_group_mode.split() }}"
       # - regex: '^ no switchport$'
-      #   exmaples:
+      #   examples:
       #   - ' no switchport'
       #   path:
       #     interfaces:

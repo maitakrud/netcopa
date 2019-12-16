@@ -6,7 +6,7 @@
     template: banners/default.j2
     lines:
     - regex: '^banner (\w+) (.+)$'
-      exmaples:
+      examples:
       - 'banner exec ^C'
       captures:
       - type

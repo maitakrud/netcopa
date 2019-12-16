@@ -6,7 +6,7 @@
     template: control-plane/default.j2
     lines:
     - regex: '^control-plane$'
-      exmaples:
+      examples:
       - 'control-plane'
       path:
         control_plane:

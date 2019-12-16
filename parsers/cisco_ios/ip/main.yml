@@ -59,7 +59,7 @@
     template: ip/http_server.j2
     lines:
     - regex: '^ip http server$'
-      exmaples:
+      examples:
       - 'ip http server'
       path:
         ip:
@@ -99,7 +99,7 @@
   - name: ip routes
     template: ip/routes.j2
     lines:
-    - regex: '^ip route (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$'
+    - regex: '^ip route (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|Null0\s*\d*)$'
       examples:
       - 'ip route 170.94.0.0 255.255.0.0 10.0.150.1'
       captures:
@@ -112,11 +112,128 @@
           - network: "{{ network }}"
             netmask: "{{ netmask }}"
             next_hop: "{{ next_hop }}"
+  - name: ip routes with tag
+    template: ip/routes-with-tag.j2
+    lines:
+    - regex: '^ip route (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|Null0\s*\d*) tag (\d+)$'
+      examples:
+      - 'ip route 170.94.0.0 255.255.0.0 10.0.150.1 tag 123'
+      captures:
+        - network
+        - netmask
+        - next_hop
+        - tag
+      path:
+        ip:
+          routes_with_tag:
+          - network: "{{ network }}"
+            netmask: "{{ netmask }}"
+            next_hop: "{{ next_hop }}"
+            tag: "{{ tag }}"
+  - name: ip routes with vrf
+    template: ip/routes-with-vrf.j2
+    lines:
+    - regex: '^ip route vrf (\S+) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|Null0\s*\d*)$'
+      examples:
+        - 'ip route vrf foo 170.94.0.0 255.255.0.0 10.0.150.1'
+      captures:
+        - vrf
+        - network
+        - netmask
+        - next_hop
+      path:
+        ip:
+          routes_with_vrf:
+            - vrf: "{{ vrf }}"
+              network: "{{ network }}"
+              netmask: "{{ netmask }}"
+              next_hop: "{{ next_hop }}"
+  - name: ip routes with name
+    template: ip/routes-with-name.j2
+    lines:
+    - regex: '^ip route (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|Null0\s*\d*) name (\S+)$'
+      examples:
+        - 'ip route vrf foo 170.94.0.0 255.255.0.0 10.0.150.1'
+      captures:
+        - network
+        - netmask
+        - next_hop
+        - name
+      path:
+        ip:
+          routes_with_name:
+            - network: "{{ network }}"
+              netmask: "{{ netmask }}"
+              next_hop: "{{ next_hop }}"
+              name: "{{ name }}"
+  - name: ip routes with vrf and tag
+    template: ip/routes-with-vrf-and-tag.j2
+    lines:
+    - regex: '^ip route vrf (\S+) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|Null0\s*\d*) tag (\S+)$'
+      examples:
+        - 'ip route vrf foo 170.94.0.0 255.255.0.0 10.0.150.1'
+      captures:
+        - vrf
+        - network
+        - netmask
+        - next_hop
+        - tag
+      path:
+        ip:
+          routes_with_vrf_and_tag:
+            - vrf: "{{ vrf }}"
+              network: "{{ network }}"
+              netmask: "{{ netmask }}"
+              next_hop: "{{ next_hop }}"
+              tag: "{{ tag }}"
+  - name: ip routes with vrf and name
+    template: ip/routes-with-vrf-and-name.j2
+    lines:
+    - regex: '^ip route vrf (\S+) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|Null0\s*\d*) name (\S+)$'
+      examples:
+        - 'ip route vrf foo 170.94.0.0 255.255.0.0 10.0.150.1 name bar'
+      captures:
+        - vrf
+        - network
+        - netmask
+        - next_hop
+        - name
+      path:
+        ip:
+          routes_with_vrf_and_name:
+            - vrf: "{{ vrf }}"
+              network: "{{ network }}"
+              netmask: "{{ netmask }}"
+              next_hop: "{{ next_hop }}"
+              name: "{{ name }}"
+  - name: ip routes with vrf, tag and name
+    template: ip/routes-with-vrf-tag-and-name.j2
+    lines:
+    - regex: '^ip route vrf (\S+) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|Null0\s*\d*) tag (\S+) name (\S+)$'
+      examples:
+        - 'ip route vrf foo 170.94.0.0 255.255.0.0 10.0.150.1 tag 123 name bar'
+        - 'ip route vrf bar 172.26.0.0 255.255.255.0 Null0 10 tag 432 name boo'
+      captures:
+        - vrf
+        - network
+        - netmask
+        - next_hop
+        - tag
+        - name
+      path:
+        ip:
+          routes_with_vrf_tag_and_name:
+            - vrf: "{{ vrf }}"
+              network: "{{ network }}"
+              netmask: "{{ netmask }}"
+              next_hop: "{{ next_hop }}"
+              tag: "{{ tag }}"
+              name: "{{ name }}"
   - name: ip routing
     template: ip/routing.j2
     lines:
     - regex: '^ip routing$'
-      exmaples:
+      examples:
       - 'ip routing'
       path:
         ip:

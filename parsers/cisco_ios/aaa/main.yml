@@ -6,7 +6,7 @@
     template: aaa/new_model.j2
     lines:
     - regex: '^aaa new-model$'
-      exmaples:
+      examples:
       - 'aaa new-model'
       path:
         aaa:

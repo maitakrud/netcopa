@@ -1,4 +1,4 @@
-{% for key, value in vars['interfaces'].iteritems() %}
+{% for key, value in vars['interfaces'].items() %}
 {% if value['name'].startswith('Vlan') or value['name'].startswith('port-channel') %}
 - parents:
   - interface {{ value['name'] }}
@@ -88,7 +88,7 @@
   - "  vpc {{ value['vpc'] }}"
 {% endif %}{# vpc #}
 {% if 'vrrp' in value %}
-{% for vrrp_key, vrrp_value in value['vrrp'].iteritems() %}
+{% for vrrp_key, vrrp_value in value['vrrp'].items() %}
   - "  vrrp {{ vrrp_value['id'] }}"
 {% if 'priority' in vrrp_value %}
   - "    priority {{ vrrp_value['priority'] }}"

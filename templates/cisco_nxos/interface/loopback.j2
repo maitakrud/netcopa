@@ -1,4 +1,4 @@
-{% for key, value in vars['interfaces'].iteritems() %}
+{% for key, value in vars['interfaces'].items() %}
 {% if value['name'].startswith('loopback') %}
 - parents:
   - interface {{ value['name'] }}

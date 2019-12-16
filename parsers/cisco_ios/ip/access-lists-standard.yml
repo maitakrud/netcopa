@@ -63,7 +63,7 @@
                     source_network: "{{ source_network }}"
                     source_wildcard: "{{ source_wildcard }}"
       - regex: '^ remark (.*)$'
-        exmaples:
+        examples:
         - ' remark --------permit the network'
         captures:
         - remark

@@ -22,7 +22,7 @@
                 number: "{{ number }}"
       lines:
       - regex: '^ exec-timeout (\d+) (\d+)$'
-        exmaples:
+        examples:
         - ' exec-timeout 15 0'
         captures:
         - minutes
@@ -36,7 +36,7 @@
                     minutes: "{{ minutes }}"
                     seconds: "{{ seconds }}"
       - regex: '^ password (\d) (\S+)$'
-        exmaples:
+        examples:
         - ' password 7 AAAAAAAAAAAA'
         captures:
         - encryption_type
@@ -50,7 +50,7 @@
                     encryption_type: "{{ encryption_type }}"
                     password: "{{ password }}"
       - regex: '^ login authentication (\S+)$'
-        exmaples:
+        examples:
         - ' login authentication CONSOLE'
         captures:
         - named_list
@@ -87,7 +87,7 @@
                 "{{ number }}":
                   escape_character: "{{ escape_character }}"
       - regex: '^ stopbits (\d+)$'
-        exmaples:
+        examples:
         - 'stopbits 8'
         captures:
         - stopbits

@@ -7,7 +7,7 @@
     template: aaa/groups.j2
     lines:
     - regex: '^aaa group server (\S+) (\S+)$'
-      exmaples:
+      examples:
       - 'aaa group server tacacs+ tacacs-servers'
       captures:
       - group_type

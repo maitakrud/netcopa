@@ -6,7 +6,7 @@
     template: hostname/default.j2
     lines:
     - regex: '^hostname (\S+)$'
-      exmaples:
+      examples:
       - 'hostname device.company.net'
       captures:
       - hostname

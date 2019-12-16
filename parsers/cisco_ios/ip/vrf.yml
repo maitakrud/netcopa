@@ -1,0 +1,60 @@
+- name: vrf
+  tags:
+  - vrf
+  matches:
+  - name: vrf
+    template: ip/vrf.j2
+    lines:
+    - regex: '^ip vrf (\S+)$'
+      examples:
+      - 'ip vrf vrf-foo'
+      captures:
+      - name
+      path:
+        vrfs:
+          "{{ name }}":
+            name: "{{ name }}"
+      lines:
+      - regex: '^ description (.*)$'
+        examples:
+        - ' description M&A network'
+        captures:
+        - description
+        path:
+          vrfs:
+            "{{ name }}":
+              description: "{{ description }}"
+      - regex: '^ rd (.+):(\d+)$'
+        examples:
+        - ' rd 48061:2'
+        captures:
+        - rd
+        - rt
+        path:
+          vrfs:
+            "{{ name }}":
+              route-target:
+                rt: "{{ rt }}"
+                rd: "{{ rd }}"
+      - regex: ' route-target export (\d{1,5}:\d{1,5})'
+        examples:
+        - 'route-target export 65108:1'
+        captures:
+        - export
+        path:
+          vrfs:
+            "{{ name }}":
+              route-target:
+                exports:
+                  - '"{{ export }}"'
+      - regex: ' route-target import (\d{1,5}:\d{1,5})'
+        examples:
+        - 'route-target import 65108:1'
+        captures:
+        - import
+        path:
+          vrfs:
+            "{{ name }}":
+              route-target:
+                imports:
+                  - '"{{ import }}"'

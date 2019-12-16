@@ -4,13 +4,24 @@
   lines:
 {% if 'description' in value %}
   - " description {{ value['description'] }}"
-{% if 'subdescription' in value %}
+{%   if 'subdescription' in value %}
   - "  subdescription {{ value['subdescription'] }}"
+{%   endif %}
+{% endif %}{# description #}
+{% if 'mtu' in value %}
+  - " mtu {{ value['mtu'] }}"
 {% endif %}
-{% endif %}
+{% if 'mac' in value %}
+  - " mac-address {{ value['mac'] }}"
+{% endif %}{# mac #}
+{% if 'bandwidth' in value %}
+{% for entry in value['bandwidth'] %}
+  - " bandwidth {{ entry }}"
+{% endfor %}
+{% endif %}{# bandwidth #}
 {% if 'vrf' in value %}
-  - " vrf forwarding {{ value['vrf'] }}"
-{% endif %}
+  - " ip vrf forwarding {{ value['vrf'] }}"
+{% endif %}{# vrf #}
 {% if 'switchport' in value %}
 {% if 'access' in value['switchport'] %}
 {% if 'vlan' in value['switchport']['access'] %}
@@ -43,47 +54,71 @@
 {% if 'channel_group' in value %}
   - " channel-group {{ value['channel_group'] }} mode {{ value['channel_group_mode']|join(' ') }}"
 {% endif %}{# channel_group #}
-{% if 'bandwidth' in value %}
-{% for entry in value['bandwidth'] %}
-  - " bandwidth {{ entry }}"
-{% endfor %}
-{% endif %}{# bandwidth #}
 {% if 'ip' in value %}
-{% if 'address' in value['ip'] %}
-{% if 'ipv4_address' in value['ip']['address'] and 'ipv4_netmask' in value['ip']['address'] %}
+{%   if 'address' in value['ip'] %}
+{%     if 'ipv4_address' in value['ip']['address'] and 'ipv4_netmask' in value['ip']['address'] %}
   - " ip address {{ value['ip']['address']['ipv4_address'] }} {{ value['ip']['address']['ipv4_netmask'] }}"
-{% endif %}{# ipv4_address #}
-{% if 'negate' in value['ip']['address'] and value['ip']['address']['negate'] %}
+{%     endif %}{# ipv4_address #}
+{%     if 'negate' in value['ip']['address'] and value['ip']['address']['negate'] %}
   - " no ip address"
-{% endif %}{# negate #}
-{% endif %}{# address #}
-{% if 'redirects' in value['ip'] and 'negate' in value['ip']['redirects'] and value['ip']['redirects']['negate'] %}
-  - " no ip redirects"
-{% endif %}{# ip redirects #}
-{% if 'mtu' in value['ip']  %}
-  - " ip mtu {{ value['ip']['mtu'] }}"
-{% endif %}{# ip mtu #}
-{% if 'access_groups' in value['ip'] %}
-{% for entry in value['ip']['access_groups'] %}
+{%     endif %}{# negate #}
+{%   endif %}{# address #}
+{%   if 'access_groups' in value['ip'] %}
+{%     for entry in value['ip']['access_groups'] %}
   - " ip access-group {{ entry['name'] }} {{ entry['direction'] }}"
-{% endfor %}
-{% endif %}
-{% if 'nbar' in value['ip'] and 'protocol_discovery' in value['ip']['nbar'] and value['ip']['nbar']['protocol_discovery'] %}
+{%     endfor %}
+{%   endif %}{# access-group #}
+{%   if 'helper_addresses' in value['ip'] %}
+{%     for address in value['ip']['helper_addresses'] %}
+  - " ip helper-address {{ address['ipv4_helper_address'] }}"
+{%     endfor %}{# helpers #}
+{%   endif %}{# helper_addresses #}
+{%   if 'redirects' in value['ip'] and 'negate' in value['ip']['redirects'] and value['ip']['redirects']['negate'] %}
+  - " no ip redirects"
+{%   endif %}{# ip redirects #}
+{%   if 'unreachables' in value['ip'] and 'negate' in value['ip']['unreachables'] and value['ip']['unreachables']['negate'] %}
+  - " no ip unreachables"
+{%   endif %}{# ip unreachables #}
+{%   if 'directed_broadcast' in value['ip'] and value['ip']['directed_broadcast'] == true %}
+  - " ip directed-broadcast"
+{%   endif %}{# directed-broadcast #}
+{%   if 'directed_broadcast' in value['ip'] and not value['ip']['directed_broadcast'] == true %}
+  - " ip directed-broadcast {{ value['ip']['directed_broadcast'] }}"
+{%   endif %}{# directed-broadcast with acl #}
+{%   if 'proxy_arp' in value['ip'] %}
+{%     if 'negate' in value['ip']['proxy_arp'] and value['ip']['proxy_arp']['negate'] %}
+  - " no ip proxy-arp"
+{%     endif %}
+{%   endif %}{# ip proxy-arp #}
+{%   if 'pim' in value['ip'] %}
+  - " ip pim {{ value['ip']['pim']['mode'] }}"
+{%   endif %}{# pim mode #}
+{%  if 'mroute' in value['ip'] %}
+{%    if 'cache' in value['ip']['mroute'] %}
+{%      if 'negate' in value['ip']['mroute']['cache'] and value['ip']['mroute']['cache']['negate'] %}
+  - " no ip mroute-cache"
+{%      endif %}
+{%    endif %}
+{%  endif %}{# mroute #}
+{%   if 'mtu' in value['ip']  %}
+  - " ip mtu {{ value['ip']['mtu'] }}"
+{%   endif %}{# ip mtu #}
+{%   if 'nbar' in value['ip'] and 'protocol_discovery' in value['ip']['nbar'] and value['ip']['nbar']['protocol_discovery'] %}
   - " ip nbar protocol-discovery"
-{% endif %}{# ip nbar protocol-discovery #}
-{% if 'flow' in value['ip'] %}
-{% for direction in value['ip']['flow']['directions'] %}
+{%   endif %}{# ip nbar protocol-discovery #}
+{%   if 'flow' in value['ip'] %}
+{%     for direction in value['ip']['flow']['directions'] %}
   - " ip flow {{ direction }}"
-{% endfor %}{# flow directions #}
-{% endif %}{# flow #}
-{% if 'nbar' in value['ip'] %}
-{% if 'map' in value['ip']['nbar'] %}
-{% if 'multicast' in value['ip']['nbar']['map'] and 'dynamic' in value['ip']['nbar']['map']['multicast'] and value['ip']['nbar']['map']['multicast']['dynamic'] %}
+{%     endfor %}{# flow directions #}
+{%   endif %}{# flow #}
+{%   if 'nbar' in value['ip'] %}
+{%     if 'map' in value['ip']['nbar'] %}
+{%       if 'multicast' in value['ip']['nbar']['map'] and 'dynamic' in value['ip']['nbar']['map']['multicast'] and value['ip']['nbar']['map']['multicast']['dynamic'] %}
   - " ip nhrp map multicast dynamic"
-{% endif %}{# ip nhrp map multicast dynamic #}
-{% if 'ip_address' in value['ip']['nbar']['map'] and 'nbma_address' in value['ip']['nbar']['map'] %}
+{%       endif %}{# ip nhrp map multicast dynamic #}
+{%       if 'ip_address' in value['ip']['nbar']['map'] and 'nbma_address' in value['ip']['nbar']['map'] %}
   - " ip nhrp map {{ value['ip']['nbar']['map']['ip_address'] }} {{ value['ip']['nbar']['map']['nbma_address'] }}"
-{% endif %}{# ip nhrp map 1.1.1.1 2.2.2.2 #}
+{%       endif %}{# ip nhrp map 1.1.1.1 2.2.2.2 #}
 {% if 'multicast' in value['ip']['nbar']['map'] and 'nbma_address' in value['ip']['nbar']['map']['multicast'] %}
   - " ip nhrp map multicast {{ value['ip']['nbar']['map']['nbma_address'] }}"
 {% endif %}{# ip nhrp map multicast 2.2.2.2 #}
@@ -129,11 +164,6 @@
   - " ip ospf authentication-key {{ value['ip']['ospf']['encryption_type'] }} {{ value['ip']['ospf']['authentication_key'] }}"
 {% endif %}{# authentication-key #}
 {% endif %}{# ospf #}
-{% if 'helper_addresses' in value['ip'] %}
-{% for address in value['ip']['helper_addresses'] %}
-  - " ip helper-address {{ address['ipv4_helper_address'] }}"
-{% endfor %}{# helpers #}
-{% endif %}{# helper_addresses #}
 {% if 'route_cache' in value['ip'] %}
   - " ip route-cache {{ value['ip']['route_cache'] }}"
 {% endif %}{# route-cache #}
@@ -141,6 +171,9 @@
   - " ip policy route-map {{ value['ip']['policy_route_map'] }}"
 {% endif %}{# policy_route_map #}
 {% endif %}{# ip #}
+{% if 'load_interval' in value %}
+  - " load-interval {{ value['load_interval'] }}"
+{% endif %}{# load_interval #}
 {% if 'encapsulation' in value %}
 {% if 'protocol' in value['encapsulation'] %}
 {% if 'tag' in value['encapsulation'] %}
@@ -153,6 +186,33 @@
 {% if 'shutdown' in value and value['shutdown'] %}
   - " shutdown"
 {% endif %}{# shutdown #}
+{% if 'standby' in value %}
+{%   if 'version' in value['standby'] %}
+  - " standby version {{ value['standby']['version'] }}"
+{%   endif %}
+{%   if 'group' in value['standby'] %}
+{%     if 'ip' in value['standby'] %}
+  - " standby {{ value['standby']['group'] }} ip {{ value['standby']['ip'] }}"
+{%     endif %}
+{%     if 'priority' in value['standby'] %}
+  - " standby {{ value['standby']['group'] }} priority {{ value['standby']['priority'] }}"
+{%     endif %}
+{%     if 'delay' in value['standby'] and value['standby']['preempt'] %}
+  - " standby {{ value['standby']['group'] }} preempt delay minimum {{ value['standby']['delay'] }}"
+{%     endif %}
+{%   endif %}
+{% endif %}{# standby #}
+{% if 'arp_timeout' in value %}
+  - " arp timeout {{ value['arp_timeout'] }}"
+{% endif %}{# arp timeout #}
+{% if 'hold_queue' in value %}
+{%  if 'in' in value['hold_queue'] and 'queue' in value['hold_queue']['in'] %}
+  - " hold-queue {{ value['hold_queue']['in']['queue'] }} in"
+{%  endif %}
+{%  if 'out' in value['hold_queue'] and 'queue' in value['hold_queue']['out'] %}
+  - " hold-queue {{ value['hold_queue']['out']['queue'] }} out"
+{%  endif %}
+{% endif %}{# hold-queue #}
 {% if 'isdn' in value %}
 {% for entry in value['isdn'] %}
   - " isdn {{ entry }}"
@@ -185,12 +245,6 @@
 {% if 'negotiation' in value and not value['negotiation']['negate'] %}
   - " negotiation {{ value['negotiation']['type'] }}"
 {% endif %}{# negotiation #}
-{% if 'ip' in value and 'pim' in value['ip'] %}
-  - " ip pim {{ value['ip']['pim']['mode'] }}"
-{% endif %}{# pim mode #}
-{% if 'load_interval' in value %}
-  - " load-interval {{ value['load_interval'] }}"
-{% endif %}{# load_interval #}
 {% if 'duplex' in value %}
   - " duplex {{ value['duplex'] }}"
 {% endif %}{# duplex #}

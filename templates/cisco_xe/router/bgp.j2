@@ -80,7 +80,7 @@
 {# -------------ADDRESS FAMILIES BEGIN---------------- #}
 {% if 'address_families' in vars['router']['bgp'][process] %}
 {% for ip_version in vars['router']['bgp'][process]['address_families'] %}
-{% for vrf_name, vrf in vars['router']['bgp'][process]['address_families'][ip_version]['vrfs'].iteritems() %}
+{% for vrf_name, vrf in vars['router']['bgp'][process]['address_families'][ip_version]['vrfs'].items() %}
   - " !"
   - " address-family {{ vars['router']['bgp'][process]['address_families'][ip_version]['ip_version'] }} vrf {{ vrf['vrf_name'] }}"
 {% if 'synchronization' in vrf %}

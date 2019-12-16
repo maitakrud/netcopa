@@ -6,7 +6,7 @@
     template: ip/classless.j2
     lines:
     - regex: '^ip classless$'
-      exmaples:
+      examples:
       - 'ip classless'
       path:
         ip:
@@ -15,7 +15,7 @@
     template: ip/domain_list.j2
     lines:
     - regex: '^ip domain list ([A-Za-z0-9-]{1,63}.+[A-Za-z]{2,6})$'
-      exmaples:
+      examples:
       - 'ip domain list company.net'
       captures:
       - domain_list
@@ -69,7 +69,7 @@
     template: ip/http_server.j2
     lines:
     - regex: '^no ip http server$'
-      exmaples:
+      examples:
       - 'no ip http server'
       path:
         ip:

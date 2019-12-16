@@ -6,7 +6,7 @@
     template: clock/timezone.j2
     lines:
     - regex: '^clock timezone (\w+) (\d+)'
-      exmaples:
+      examples:
       - 'clock timezone utc 0'
       captures:
       - timezone
@@ -16,7 +16,7 @@
           timezone: "{{ timezone }}"
           hours_offset: "{{ hours_offset }}"
     - regex: '^clock timezone (\w+) (\d+) (\d+)'
-      exmaples:
+      examples:
       - 'clock timezone utc 0 0'
       captures:
       - timezone

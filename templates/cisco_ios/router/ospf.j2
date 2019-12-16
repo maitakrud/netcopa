@@ -1,5 +1,5 @@
 {% if 'router' in vars and 'ospf' in vars['router'] %}
-{% for key, value in vars['router']['ospf'].iteritems() %}
+{% for key, value in vars['router']['ospf'].items() %}
 - parents:
   - router ospf {{ value['process_id'] }}
   lines:
@@ -13,7 +13,7 @@
   - " auto-cost reference-bandwidth {{ value['auto_cost_reference_bandwidth'] }}"
 {% endif %}{# auto_cost_reference_bandwidth #}
 {% if 'areas' in value %}
-{% for area_id, area in value['areas'].iteritems() %}
+{% for area_id, area in value['areas'].items() %}
 {% if 'authentication' in area and area['authentication'] %}
   - " area {{ area['area_id'] }} authentication"
 {% endif %}{# authentication #}

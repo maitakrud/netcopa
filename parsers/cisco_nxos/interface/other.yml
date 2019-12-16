@@ -6,7 +6,7 @@
     template: interface/other.j2
     lines:
     - regex: '^interface ((Vlan|port-channel)\S+)$'
-      exmaples:
+      examples:
       - 'interface Vlan2103'
       captures:
       - name
@@ -16,7 +16,7 @@
             name: "{{ name }}"
       lines:
       - regex: '^\s*vrf member (\S*)$'
-        exmaples:
+        examples:
         - '  vrf member zone1'
         captures:
         - vrf
@@ -25,7 +25,7 @@
             "{{ name }}":
               vrf: "{{ vrf }}"
       - regex: '^\s*description (.*)$'
-        exmaples:
+        examples:
         - 'description My interface description'
         captures:
         - description
@@ -187,7 +187,7 @@
               switchport:
                 mode: "{{ mode }}"
       - regex: '^\s*switchport trunk native vlan (\d{1,4})$'
-        exmaples:
+        examples:
         - ' switchport trunk native vlan 5'
         captures:
         - vlan
@@ -198,7 +198,7 @@
                 trunk:
                   native_vlan: "{{ vlan }}"
       - regex: '^\s*switchport trunk allowed vlan (?!(add))(.*)$'
-        exmaples:
+        examples:
         - 'switchport trunk allowed vlan 1,2,903-905'
         captures:
         - not add
@@ -211,7 +211,7 @@
                   allowed_vlans:
                     vlans: "\"{{ vlans }}\""
       - regex: '^\s*switchport trunk allowed vlan add (.*)$'
-        exmaples:
+        examples:
         - ' switchport trunk allowed vlan add 1002-1005'
         captures:
         - vlans
@@ -224,7 +224,7 @@
                     add:
                     - "\"{{ vlans }}\""
       - regex: '^\s*spanning-tree port type (.*)$'
-        exmaples:
+        examples:
         - '  spanning-tree port type edge trunk'
         captures:
         - spanning_tree_port_types
@@ -235,7 +235,7 @@
                 port:
                   types: "{{ spanning_tree_port_types.split() }}"
       - regex: '^\s*spanning-tree bpduguard enable$'
-        exmaples:
+        examples:
         - '  spanning-tree bpduguard enable'
         path:
           interfaces:
@@ -244,14 +244,14 @@
                 bpduguard:
                   enabled: true
       - regex: '^\s*vpc peer-link$'
-        exmaples:
+        examples:
         - ' vpc 32'
         path:
           interfaces:
             "{{ name }}":
               vpc_peer_link: true
       - regex: '^\s*speed (\d+)$'
-        exmaples:
+        examples:
         - ' speed 10000'
         captures:
         - speed
@@ -260,7 +260,7 @@
             "{{ name }}":
               speed: "{{ speed }}"
       - regex: '^\s*mtu (\d+)$'
-        exmaples:
+        examples:
         - ' mtu 9216'
         captures:
         - mtu
@@ -269,7 +269,7 @@
             "{{ name }}":
               mtu: "{{ mtu }}"
       - regex: '^\s*vpc (\d+)$'
-        exmaples:
+        examples:
         - ' vpc 32'
         captures:
         - vpc
@@ -297,7 +297,7 @@
       #           access:
       #             vlan: "{{ vlan }}"
       # - regex: '^ switchport trunk encapsulation (\w+)$'
-      #   exmaples:
+      #   examples:
       #   - ' switchport trunk encapsulation dot1q'
       #   captures:
       #   - switchport_trunk_encapsulation
@@ -308,7 +308,7 @@
       #           trunk:
       #             encapsulation: "{{ switchport_trunk_encapsulation }}"
       # - regex: '^ switchport trunk native vlan (\d{1,4})$'
-      #   exmaples:
+      #   examples:
       #   - ' switchport trunk native vlan 5'
       #   captures:
       #   - vlan
@@ -319,7 +319,7 @@
       #           trunk:
       #             native_vlan: "{{ vlan }}"
       # - regex: '^ switchport trunk allowed vlan (?!(add))(.*)$'
-      #   exmaples:
+      #   examples:
       #   - 'switchport trunk allowed vlan 1,2,903-905'
       #   captures:
       #   - not add
@@ -332,7 +332,7 @@
       #             allowed_vlans:
       #               vlans: "\"{{ vlans }}\""
       # - regex: '^ switchport trunk allowed vlan add (.*)$'
-      #   exmaples:
+      #   examples:
       #   - ' switchport trunk allowed vlan add 1002-1005'
       #   captures:
       #   - vlans
@@ -365,7 +365,7 @@
       #         channel_group: "{{ channel_group }}"
       #         channel_group_mode: "{{ channel_group_mode.split() }}"
       # - regex: '^ no switchport$'
-      #   exmaples:
+      #   examples:
       #   - ' no switchport'
       #   path:
       #     interfaces:

@@ -3,7 +3,7 @@
 {% from 'bgp_aggregate_addresses.j2' import render_aggregate_addresses with context %}
 {#  ############################################## begin template #}
 {% if 'router' in vars and 'bgp' in vars['router'] %}
-{% for process_id, process in vars['router']['bgp'].iteritems() %}
+{% for process_id, process in vars['router']['bgp'].items() %}
 - parents:
   - router bgp {{ process['process_id'] }}
   lines:
@@ -40,7 +40,7 @@
 {# -------------ADDRESS FAMILIES BEGIN---------------- #}
 {% if 'address_families' in process %}
   - " !"
-{% for ip_version, address_family in process['address_families'].iteritems() %}
+{% for ip_version, address_family in process['address_families'].items() %}
   - " address-family {{ address_family['ip_version'] }}"
 {#  ############################################## aggregate_addresses #}
 {{ render_aggregate_addresses(address_family, "  ") }}
