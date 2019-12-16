@@ -1,0 +1,25 @@
+{% if 'vrfs' in vars %}
+{% for vrf in vars['vrfs'] %}
+- parents:
+  - ip vrf {{ vars['vrfs'][vrf]['name'] }}
+  lines:
+{% if 'description' in vars['vrfs'][vrf] %}
+  - " description {{ vars['vrfs'][vrf]['description'] }}"
+{% endif %}
+{% if 'route-target' in vars['vrfs'][vrf] %}
+  - " rd {{ vars['vrfs'][vrf]['route-target']['rd'] }}:{{ vars['vrfs'][vrf]['route-target']['rt'] }}"
+{% endif %}
+{% if 'route-target' in vars['vrfs'][vrf] %}
+{%   if 'exports' in vars['vrfs'][vrf]['route-target'] %}
+{%     for export in vars['vrfs'][vrf]['route-target']['exports'] %}
+  - " route-target export {{ export }}"
+{%     endfor %}
+{%   endif %}
+{%   if 'imports' in vars['vrfs'][vrf]['route-target'] %}
+{%     for import in vars['vrfs'][vrf]['route-target']['imports'] %}
+  - " route-target import {{ import }}"
+{%     endfor %}
+{%   endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
