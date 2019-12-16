@@ -1,7 +1,9 @@
+#!/usr/bin/env python
 """ Parses structured text into structured data_merge
 """
 
 from __future__ import print_function
+from __future__ import unicode_literals
 from collections import OrderedDict
 from argparse import ArgumentParser, RawTextHelpFormatter
 import re
@@ -38,7 +40,7 @@ def represents_int(string):
     try:
         int(string)
         return True
-    except ValueError:
+    except(ValueError):
         return False
 
 def data_merge(obj_a, obj_b):
@@ -53,7 +55,7 @@ def data_merge(obj_a, obj_b):
     """
     key = None
     try:
-        if obj_a is None or isinstance(obj_a, (str, unicode, int, long, float)):
+        if obj_a is None or isinstance(obj_a, (str, int, float)):
             # border case for first run or if a is a primitive
             obj_a = obj_b
         elif isinstance(obj_a, list):
@@ -76,8 +78,8 @@ def data_merge(obj_a, obj_b):
                 raise 'Cannot merge non-dict "%s" into dict "%s"' % (obj_b, obj_a)
         else:
             raise 'NOT IMPLEMENTED "%s" into "%s"' % (obj_b, obj_a)
-    except TypeError, exc:
-        raise 'TypeError "%s" in key "%s" when merging "%s" into "%s"' % (exc, key, obj_b, obj_a)
+    except(TypeError):
+       raise 'TypeError in key "%s" when merging "%s" into "%s"' % (key, obj_b, obj_a)
     return obj_a
 
 def remove_keys(obj, rubbish):
@@ -95,7 +97,7 @@ def remove_keys(obj, rubbish):
     if isinstance(obj, dict):
         obj = {
             key: remove_keys(value, rubbish)
-            for key, value in obj.iteritems()
+            for key, value in obj.items()
             if key not in rubbish}
     elif isinstance(obj, list):
         for entry in obj:
@@ -122,7 +124,7 @@ def seq_in_seq(subseq, seq):
             idx = seq.index(subseq[0], idx + 1, slen - blen + 1)
             if subseq == seq[idx:idx + blen]:
                 return idx
-    except ValueError:
+    except(ValueError):
         return -1
 
 def get_configurations():
@@ -169,7 +171,7 @@ def copy_host_vars(devices, src_dir, dst_dir):
                 dst = '%s/%s.yml' % (dst_dir, device['hostname'])
                 copyfile(src, dst)
                 print_log('ok', 'ok')
-            except IOError:
+            except(IOError):
                 device['failed'] = True
                 reason = "host_vars file missing."
                 device['failed_reason'] = reason
@@ -189,14 +191,14 @@ def load_host_vars(device):
     try:
         with open('%s/%s.yml' % (HOST_VARS_TEMP, device['hostname']), 'r') as stream:
             try:
-                device.update(yaml.load(stream))
-            except TypeError:
+                device.update(yaml.full_load(stream))
+            except(TypeError):
                 device['failed'] = True
                 device['failed_reason'] = "host_vars file appears empty."
-            except yaml.YAMLError:
+            except(yaml.YAMLError):
                 device['failed'] = True
                 device['failed_reason'] = "Failed host_vars import."
-    except IOError:
+    except(IOError):
         device['failed'] = True
         reason = "Missing host_vars file."
         device['failed_reason'] = reason
@@ -272,14 +274,14 @@ def load_parsers(devices, args):
             for parser_file in parser_files:
                 with open(parser_file, 'r') as stream:
                     try:
-                        parsers = yaml.load(stream)
-                    except TypeError:
+                        parsers = yaml.full_load(stream)
+                    except(TypeError):
                         device['failed'] = True
                         reason = "Parser appears empty: %s/%s" % (device['os'], parser_file)
                         device['failed_reason'] = reason
                         print_log(reason, 'failed')
                         break
-                    except yaml.YAMLError:
+                    except(yaml.YAMLError):
                         device['failed'] = True
                         reason = "Error importing parser: %s/%s" % (device['os'], parser_file)
                         device['failed_reason'] = reason
@@ -311,15 +313,15 @@ def load_removers(devices):
             remover_file = directory + '/main.yml'
             with open(remover_file, 'r') as stream:
                 try:
-                    device['removers'] = yaml.load(stream)
+                    device['removers'] = yaml.full_load(stream)
                     print_log('ok', 'ok')
-                except TypeError:
+                except(TypeError):
                     device['failed'] = True
                     reason = "Removers appears empty: %s/%s" % (device['os'], remover_file)
                     device['failed_reason'] = reason
                     print_log(reason, 'failed')
                     break
-                except yaml.YAMLError:
+                except(yaml.YAMLError):
                     device['failed'] = True
                     reason = "Error importing removers: %s/%s" % (device['os'], remover_file)
                     device['failed_reason'] = reason
@@ -375,7 +377,7 @@ def capture_merge(device, line, current_match, entry):
                     current_match['capture_vars'][capture] = matches.groups(0)[idx]
         full_path = yaml.dump(entry['path'])
         full_path = full_path.replace("\'", "")
-        full_path = yaml.load(jinja2.Environment().from_string(full_path) \
+        full_path = yaml.full_load(jinja2.Environment().from_string(full_path) \
                               .render(current_match['capture_vars']))
         device['extractions'] = data_merge(device['extractions'], full_path)
         entry['actual'] = []
@@ -540,13 +542,13 @@ def persist_host_vars(devices, directory, args):
             try:
                 with open(host_vars_file, 'r') as stream:
                     try:
-                        temp_vars = yaml.load(stream)
+                        temp_vars = yaml.full_load(stream)
                         host_vars = temp_vars
-                    except TypeError:
+                    except(TypeError):
                         device['failed'] = True
                         device['failed_reason'] = "Hostvars appears empty."
                         print_log(device['failed_reason'], 'failed')
-                    except yaml.YAMLError:
+                    except(yaml.YAMLError):
                         device['failed'] = True
                         device['failed_reason'] = "Failed host_vars import."
                         print_log(device['failed_reason'], 'failed')
@@ -563,10 +565,10 @@ def persist_host_vars(devices, directory, args):
                     try:
                         yaml.dump(host_vars, outfile, default_flow_style=False)
                         print_log('ok', 'ok')
-                    except yaml.YAMLError:
+                    except(yaml.YAMLError):
                         device['failed'] = True
                         device['failed_reason'] = "Failed host_vars export."
-            except IOError:
+            except(IOError):
                 device['failed'] = True
                 reason = "Missing host_vars file for %s" % device['hostname']
                 device['failed_reason'] = reason
@@ -584,7 +586,7 @@ def sort_by_ip_as_int(dyct):
     """
     order_dict = OrderedDict(sorted(dyct.items(),
                                     key=lambda t: \
-                                    int(ipaddress.ip_address(unicode(t[0])))))
+                                    int(ipaddress.ip_address(str(t[0])))))
     return order_dict.items()
 
 def render(tpl_path, context):
@@ -604,7 +606,7 @@ def render(tpl_path, context):
         env.filters['sort_by_ip_as_int'] = sort_by_ip_as_int
         env.loader = jinja2.FileSystemLoader(path or './')
         return None, env.get_template(filename).render(context)
-    except jinja2.exceptions.TemplateNotFound:
+    except(jinja2.exceptions.TemplateNotFound):
         return 'Template not found. (%s)' % tpl_path, None
 
 def render_check(device, matcher):
@@ -624,14 +626,14 @@ def render_check(device, matcher):
         device['failed_reason'] = error
     else:
         try:
-            results = (yaml.load(raw_results))
+            results = (yaml.full_load(raw_results))
             if not results:
                 device['failed'] = True
                 device['failed_reason'] = "Jinja template rendered empty. {:s}"\
                                           .format(template_name)
                 print_log(device['failed_reason'], 'failed')
                 return device
-        except yaml.YAMLError:
+        except(yaml.YAMLError):
             device['failed'] = True
             device['failed_reason'] = "Error loading jinja template, invalid yml. {:s}"\
                                       .format(template_name)
